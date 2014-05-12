@@ -1,0 +1,19 @@
+﻿div.bigImgCont,div.litImgCont {width:45%;height:440px;overflow:scroll;background:rgb(230,230,230);display:inline-block;float:left;}
+div.litImgCont{width:49%;}
+div.bigImgCont img{width:80%;}
+div.bigImgCont span{margin:7px;display:inline-block;border:1px solid rgb(200,200,200);}
+a.addPh{text-align:center;width:99%;padding:5px 0px;background:rgb(200,200,200);display:inline-block;}
+img.litImg{width:100%;}
+div.myNicPanel{width:100%;}
+a.delObj{color:red;height:30px;float:right;text-decoration:none;}
+a.delObj:hover{text-decoration:underline;}
+a.delObj div{background-image:url('../img/nicEditorIcons.gif');background-position:-396px 0px;width:18px;height:18px;float:left;}
+
+#sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+#sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; text-align: center;width:30%;display:inline-block; }
+#sortable li:hover{background:red;}
+
+div.asker{position:absolute;width:200px;height:100px;background:rgb(250,200,200);z-index:2;border:1px solid red;color:rgb(200,0,0);display:none;}
+
+a.edT{margin-left:50px;}
+a.exitB{margin-left:50px;}

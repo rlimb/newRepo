@@ -1,0 +1,12 @@
+﻿div.bigImgCont,div.litImgCont {width:100%;background:rgb(230,230,230);}
+div.litImgCont{height:100px;overflow:scroll;}
+div.bigImgCont img{height:300px;}
+div.bigImgCont span{margin:7px;display:inline-block;border:1px solid rgb(200,200,200);}
+
+img.litImg{width:102px;cursor:pointer;}
+#templ { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+#templ li { margin: 3px 3px 3px 0; padding: 1px; float: left; text-align: center;width:108;display:inline-block; }
+#templ li:hover{background:red;}
+
+b.edT{margin-left:50px;}
+a.exitB{margin-left:50px;}

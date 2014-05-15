@@ -1,13 +1,14 @@
 ﻿<?php
 @session_start();
-require_once('connect.php');
 $isG=isset($_GET['g']);
 $isT=isset($_GET['t']);
+require_once('connect.php');
+if($isG||$isT)require_once('imageLoad.php');
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<title>Ландшафтный дизайн</title>
+<title>фотоальбом</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -25,6 +26,8 @@ $('.exitB').click(adminFunc.verifMe);
 <?php if($isG) echo "
 $('.litImg').click(adminFunc.showBImg);
 $('.addPh').click(adminFunc.newImg);";
+elseif($isT) echo "
+$('.litImg').click(adminFunc.showBImgView);";
 ?>
 });
 </script>
@@ -32,18 +35,8 @@ $('.addPh').click(adminFunc.newImg);";
 <?php
 if($isG)
 	{
-	$myid=mysql_query("SELECT * from `photo` where 1 order by `rang`",$dbcnx);
-
-	$descPhotos=array();
-	$titlPhotos=array();
-	$litPhotos='';
-	while($res=mysql_fetch_assoc($myid))
-		{
-		$descPhotos[]=$res['rang']."':'".str_replace("'","`",$res['desc']);
-		$titlPhotos[]=$res['rang']."':'".str_replace("'","`",$res['title']);
-		$idPhotos[]=$res['rang']."':'".$res['id'];
-		$litPhotos.="<li id='item-".$res['id']."'><img alt='".$res['rang']."' src='img/galery/".$res['src']."' class='litImg'></li>";
-		}
+	$photoCl=new imageView($_SESSION['login'],$dbcnx);
+	$photoCl->getPhoto(1);
 	
 	echo "
 	<link href='css/galery.css' rel='stylesheet' />
@@ -51,9 +44,9 @@ if($isG)
 	<script src='scripts/sortable.js'></script>
 
 	<script>
-	var descPh={'".implode("','",$descPhotos)."'};
-	var titlePh={'".implode("','",$titlPhotos)."'};
-	var idPh={'".implode("','",$idPhotos)."'};
+	var descPh={'".implode("','",$photoCl->descPhotos)."'};
+	var titlePh={'".implode("','",$photoCl->titlPhotos)."'};
+	var idPh={'".implode("','",$photoCl->idPhotos)."'};
 	$(function() {
 		$('#sortable').sortable({
 		cursor: 'move',
@@ -73,7 +66,15 @@ if($isG)
 }
 elseif($isT)
 	{
-	echo "<link href='css/text_man.css' rel='stylesheet' />";
+	$photoCl=new imageView((isset($_SESSION['login'])?$_SESSION['login']:'none'),$dbcnx);
+	$photoCl->getPhoto(2);
+	echo "<link href='css/galeryView.css' rel='stylesheet' />";
+	echo "<script>
+	var descPh={'".implode("','",$photoCl->descPhotos)."'};
+	var titlePh={'".implode("','",$photoCl->titlPhotos)."'};
+	var idPh={'".implode("','",$photoCl->idPhotos)."'};</script>";
+	
+	
 	}
 ?>
 
@@ -86,11 +87,12 @@ if(isset($_SESSION['login']))
 	
 	if($isG) // block of edit galery
 		{
+		
 		echo "
-		<b>редактор галереи</b> <a href='?t=1' class='edT'>редактор статей</a>	<a href='#' class='exitB'>выход</a>
+		<b>редактор галереи</b> <a href='?t=1' class='edT'>просмотр галереи</a>	<a href='#' class='exitB'>выход</a>
 		
 		<a href='#' class='addPh'>Добавить новое фото</a><br><br>
-		<div class='litImgCont'><ul id='sortable'>".$litPhotos."</ul></div>
+		<div class='litImgCont'><ul id='sortable'>".$photoCl->litPhotos."</ul></div>
 		<div class='bigImgCont'></div>
 		
 		
@@ -99,12 +101,14 @@ if(isset($_SESSION['login']))
 		}
 	elseif(isset($_GET['t'])) //block of edit text
 		{
-		echo "<a href='?g=1' class='edG'>редактор галереи</a> <b href='?t=1' class='edT'>редактор статей</b>	<a href='#' class='exitB'>выход</a>";
 		
+		echo "<a href='?g=1' class='edG'>редактор галереи</a> <b href='?t=1' class='edT'>просмотр галереи</b>	<a href='#' class='exitB'>выход</a>";
+		
+		echo "<div class='litImgCont'><div style='width:".(count($photoCl->idPhotos)*106+60)."px;height:78px;'><ul id='templ'>".$photoCl->litPhotos."</ul></div></div><br><div class='bigImgCont'></div>";
 		}
 	else //default start menu
 		echo "<a href='?g=1'>редактор галереи</a><br>
-		<a href='t=1'>редактор статей</a><br>
+		<a href='t=1'>просмотр галереи</a><br>
 		<a href='#' class='exitB'>выход</a>";
 	}
 else echo $autorise;

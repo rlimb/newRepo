@@ -3,6 +3,8 @@
 if(!isset($_SESSION['login']))exit("alert('Необходима авторизация');");
 require_once('connect.php');
 
+// ПРОВЕРКА ДАННЫХ И ФИЛЬТР СИМВОЛОВ
+
 $text=$_GET['t'];
 
 if($_GET['ph']==1)

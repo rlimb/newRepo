@@ -18,6 +18,13 @@ var adminFunc={
 		$('#editor').html(descPh[r]);
 		$('.delObj').on('click',{atx: "вы уверены?<br><input type='button' value='да,удалить' class='delYes'><input type='button' value='нет, отмена' class='delNo'>" },adminFunc.showAsk);
 		},
+	showBImgView: function()
+		{
+		var r=$(this).attr('alt');
+		globId=idPh[r];
+		var newImg="<span id='mytitle' style=''>"+titlePh[r]+"</span><br><img src='"+$(this).attr('src')+"'><br><span id='mydesc'>"+descPh[r]+"</span>";
+		$('.bigImgCont').html(newImg);
+		},
 	newImg: function()
 		{
 		var lImg=window.open('loadFileWindow.php','loadImg','width=400,height=300');

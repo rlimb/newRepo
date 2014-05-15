@@ -1,6 +1,32 @@
 ﻿<?php
+class imageView
+	{
+	public $descPhotos=array();
+	public $titlPhotos=array();
+	public $idPhotos=array();
+	public $litPhotos='';
+	
+	function __construct($usr,$dbcnx)
+		{
+		$this->usr=$usr;
+		$this->dbcnx=$dbcnx;
+		}
+	
+	function getPhoto($par)
+		{
+		$myid=mysql_query("SELECT * from `photo` where `usr`='".$this->usr."' order by `rang`",$this->dbcnx);
 
-class imageLoad
+		while($res=mysql_fetch_assoc($myid))
+			{
+			$this->descPhotos[]=$res['rang']."':'".str_replace("'","`",$res['desc']);
+			$this->titlPhotos[]=$res['rang']."':'".str_replace("'","`",$res['title']);
+			$this->idPhotos[]=$res['rang']."':'".$res['id'];
+			$this->litPhotos.="<li id='item-".$res['id']."'><img alt='".$res['rang']."' src='img/galery/".$res['src']."' class='litImg'></li>";
+			}
+		}
+	}
+
+class imageLoad extends imageView
 	{
 	private $src;
 	private $descr;
@@ -151,9 +177,9 @@ class imageLoad
 	
 	private function saveDb()
 		{
-		$res=mysql_fetch_array(mysql_query("SELECT MAX(`rang`) from `photo`",$this->dbcnx));
+		$res=mysql_fetch_array(mysql_query("SELECT MAX(`rang`) from `photo` WHERE `usr`='".$this->usr."'",$this->dbcnx));
 
-		mysql_query("INSERT INTO `photo` VALUES(NULL,'".$this->src.".".$this->type."','".$this->descr."','".$this->title."','".($res[0]+1)."','1');",$this->dbcnx) or die(mysql_error());
+		mysql_query("INSERT INTO `photo` VALUES(NULL,'".$this->src.".".$this->type."','".$this->descr."','".$this->title."','".($res[0]+1)."','".$this->usr."');",$this->dbcnx) or die(mysql_error());
 		echo "<h1>УСПЕШНО</h1><script>window.setTimeout('window.close();',1000);</script>";
 		}
 	}
